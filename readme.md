@@ -1,7 +1,8 @@
-# <u> Zorpburg Intergalactic Spaceport Zeta </u>
+# <u> Welcome to Zorpburg </u>
+###### <i> By Oliver and Kenneth </i>
 
 ## Game Summary
-Oliver and I made a text adventure game using a [text engine](https://github.com/okaybenji/text-engine). Our storyline, is about YOU, the user trying to save your brother from Zorpburgians, who abducted him. Travel across the galaxy, battle your way through, space airport, city and to the Zorpburg headquarters, where your brother is held. Using different commands and with the help of Skish, pass through the game defeat enemies, hack your way through databases to save your brother. Good luck!
+Oliver and I made a text adventure game using a [text engine](https://github.com/okaybenji/text-engine). Our storyline, is about YOU, the user trying to save your brother from Zorpburgians, who abducted him. Travel across the galaxy, battle your way through the space airport, city and to the Zorpburg headquarters, where your brother is held. Using different commands and with the help of Skish, pass through the game defeat enemies, hack your way through databases to save your brother. Good luck!
 
 ## Commands
   - LOOK:   'look at key'
@@ -18,10 +19,12 @@ Oliver and I made a text adventure game using a [text engine](https://github.com
   - HELP:   this help menu
 
 ## Installation
-Check out the text engine [here](https://github.com/okaybenji/text-engine) to install
-- Copy the git repo: https://github.com/okaybenji/text-engine.git
-- Make a directory, create a folder within the directory
-- Enter git init, then git clone https://github.com/okaybenji/text-engine.git
-- Create a new js file aka 'game-disk'
-- Within the index.html, edit the ``` script src="game-disks/index.js ``` to ```script src="game-disks/{Your js file}```
-- Return to your js file and HAPPY CODING!
+To install the game just clone the repo like so
+
+```bash
+git clone https://github.com/olilliterate/text-engine-sci-fi-adventure.git
+```
+
+Then simply open index.html in the cloned repo with your favorite browser! 
+
+Check out the text engine [here](https://github.com/okaybenji/text-engine) to find out more!!
