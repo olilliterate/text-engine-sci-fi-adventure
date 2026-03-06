@@ -95,10 +95,11 @@ const sciFiAdventure = () => ({
       // optional list of items in the room
       items: [
         {
-          name: ['stall', `laser sword`, `laser sword stall`,'sword'], // the item's name
+          name: [`laser sword`, `laser sword stall`,'sword'], // the item's name
           desc: `This stall stocks laser swords. It is currently unattended`, // description shown when player looks at the item
 
           onUse: () => {
+            println("You sneakily pick up a LASER SWORD and add it to your inventory")
             disk.inventory.push({
               name: ['laser sword', 'sword'], // player can refer to this item by any of these names
               desc: `A sharp blade made of pure energy. It hums with power, ready to strike down any foe.`, // description shown when player looks at the item
@@ -115,6 +116,11 @@ const sciFiAdventure = () => ({
             })
           }
         },
+
+        {
+          name: [""]
+        },
+
         {
           name: "bandits", 
           desc: "They look tough but you're tougher"
@@ -130,6 +136,65 @@ const sciFiAdventure = () => ({
         
       ],
     },
+    {
+
+
+      
+
+
+      id: "pc-hq",
+      name: "Zorpburg Police Headquarters",
+      desc: `You have now arrived at the Police Headquarters, where they have held your brother for countless years`,
+
+      items: [
+        {
+          name: "elevator",
+          desc: "A crusty elevator that is in dire need of replacement. It looks like it may be hackable",
+          onUse: () => {
+            enterRoom("broCell")
+          }
+        }
+      ],
+
+      exits:[
+        {
+          dir: "down",
+          id: "broCell",
+          block: `You don't have elevator access to this room`
+        }
+      ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
   ],
   
   characters: [
