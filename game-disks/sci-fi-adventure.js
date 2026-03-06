@@ -1,61 +1,158 @@
 // This simple game disk can be used as a starting point to create a new adventure.
 // Change anything you want, add new rooms, etc.
-const newDiskTemplate = () => ({
-  roomId: 'start', // Set this to the ID of the room you want the player to start in.
+const sciFiAdventure = () => ({
+  roomId: 'spaceport-terminal', // Set this to the ID of the room you want the player to start in.
   rooms: [
     {
-      id: 'start', // Unique identifier for this room. Entering a room will set the disk's roomId to this.
-      name: 'The First Room', // Displayed each time the player enters the room.
-      desc: `There's a door to the NORTH, but it is overgrown with VINES. Type ITEMS to see a list of items in the room.`, // Displayed when the player first enters the room.
+      id: 'spaceport-terminal', // Unique identifier for this room. Entering a room will set the disk's roomId to this.
+      name: 'Zorpburg Intergalactic Spaceport Terminal Zeta', // Displayed each time the player enters the room.
+      desc: `Years after your brother was abducted by aliens, you have believe you have finally located where he is being held: The Iridescent Capital of the Galactic Federation, Zorpburg
+      
+      You are currently in Terminal Zeta of Zorpbug Intergalactic Spaceport 
+      
+      There is a Skish working at a DESK in the centre of the room
+
+      The matte white oblong spaceship you caught here lies to the NORTH
+
+      To the EAST there appears to be a vending machine???
+
+      To the SOUTH lies an AIRLOCK
+      
+      `, // Displayed when the player first enters the room.
+
+      onLook: () => {
+        const room = getRoom('spaceport-terminal');
+        room.desc = `You are currently in Terminal Zeta of Zorpbug Intergalactic Spaceport 
+      
+        There is a Skish working at a DESK in the centre of the room
+
+        The matte white oblong spaceship you caught here lies to the NORTH
+
+        To the EAST there appears to be a machine???
+
+        To the SOUTH lies an AIRLOCK
+      
+        `;
+      },
       items: [
         {
-          name: 'door',
-          desc: 'It leads NORTH.', // Displayed when the player looks at the item.
-          onUse: () => println(`Type GO NORTH to try the door.`), // Called when the player uses the item.
+          name: 'airlock',
+          desc: 'It leads SOUTH. Presumably to the rest of the spaceport', // Displayed when the player looks at the item.
+          onUse: () => println(`Type GO NORTH to try the airlock.`), // Called when the player uses the item.
         },
         {
-          name: ['vines', 'vine'], // The player can refer to this item by either name. The game will use the first name.
-          desc: `They grew over the DOOR, blocking it from being opened.`,
+          name: ['vending machine', 'machine'], // The player can refer to this item by either name. The game will use the first name.
+          desc: `A contraption of some kind with a glass pane in the centre displaying various small capsules`,
         },
         {
-          name: 'axe',
-          desc: `You could probably USE it to cut the VINES, unblocking the door.`,
-          isTakeable: true, // Allows the player to take the item.
-          onUse() {
-            // Remove the block on the room's only exit.
-            const room = getRoom('start');
-            const exit = getExit('north', room.exits);
-
-            if (exit.block) {
-              delete exit.block;
-              println(`You cut through the vines, unblocking the door to the NORTH.`);
-
-              // Update the axe's description.
-              getItem('axe').desc = `You USED it to cut the VINES, unblocking the door.`;
-            } else {
-              println(`There is nothing to use the axe on.`);
-            }
-          },
+          name: 'desk',
+          desc: `A white spotless spherical desk`,
+        },
+        {
+          name: ["spaceship", "rocket"],
+          desc: `A bizarre spaceship that seeming floats on its own`
         }
       ],
       exits: [
         {
-          dir: 'north', // "dir" can be anything. If it's north, the player will type "go north" to get to the room called "A Forest Clearing".
-          id: 'clearing',
-          block: `The DOOR leading NORTH is overgrown with VINES.`, // If an exit has a block, the player will not be able to go that direction until the block is removed.
+          dir: 'south', // "dir" can be anything. 
+          id: 'spaceport-customs',
+          block: `The AIRLOCK is closed.`, // If an exit has a block, the player will not be able to go that direction until the block is removed.
         },
       ],
     },
     {
-      id: 'clearing',
-      name: 'A Forest Clearing',
-      desc: `It's a forest clearing. To the SOUTH is The First Room.`,
+      id: 'spaceport-customs',
+      name: 'Spaceport customs',
+      desc: `It's scary`,
       exits: [
         {
-          dir: 'south',
-          id: 'start',
+          dir: 'north',
+          id: 'spaceport-terminal',
         },
       ],
     }
   ],
+  characters: [
+    {
+      name: ['Skish', "worker", 'receptionist'],
+      roomId: 'spaceport-terminal',
+      desc: "Though its hard to tell through their scaly face, they look overworked and tired", // printed when the player looks at the character
+      img: `
+      .------\\ /------.
+      |       -       |
+      |               |
+      |               |
+      |               |
+   _______________________
+   ===========.===========
+     / ~~~~~     ~~~~~ \\
+    /|     |     |\\
+    W   ---  / \\  ---   W
+    \\.      |o o|      ./
+     |                 |
+     \\    #########    /
+      \\  ## ----- ##  /
+       \\##         ##/
+        \\_____v_____/
+  
+      `,
+      // optional callback, run when the player talks to this character
+      onTalk: () => println(`The creature lets out a terrible sound, which you suppose is meant to be a sigh "Do you need anything?" it grumbles.`),
+      // things the player can discuss with the character
+      topics: [
+        {
+          option: 'Can you open the **AIRLOCK**?',
+          removeOnRead: true,
+          // optional callback, run when the player selects this option
+          onSelected() {
+            println(`"Sure" it says at it forcefully slams it's leg against a button under the desk. The airlock to the **SOUTH** hisses then pops opening the way forward`);
+            
+            const room = getRoom('spaceport-terminal');
+            const exit = getExit('south', room.exits);
+
+            if (exit.block) {
+              delete exit.block;
+            }
+          },
+        },
+        {
+          option: 'What is that **MACHINE** for?',
+
+          line: `"Bwahh Hah Bwahh Ha" it roars then says to you deadly serious "It's a vending machine"`,
+          removeOnRead: true,
+        },
+        {
+          option: `How do I use the **VENDING MACHINE**`,
+          // text printed when the player selects this option by typing the keyword (EXITS)
+          onSelected() {
+            println(`"Look kid take this and just leave me alone" mutters the creature. It hands you a purple square object that feels like plastic`);
+
+            disk.inventory.push({
+              name: ["purple object" , "coin", "plastic object", "square object"],
+              desc: `A purple square object that resembles a coin. It feels like plastic`,
+              onUse: () => {
+                  const room = getRoom(disk.roomId);
+                  if (room.id === 'spaceport-terminal') {
+                    // remove the block
+                    println(`You insert the object into the machine, then you hear a clunk from the bottom as a capsule falls out. You take the CAPSULE???`)
+                    disk.inventory.push({
+                      name: "capsule???",
+                      desc: `A strange and brightly colored capsule`
+                    })
+                    // this item can only be used once
+                    const coin = getItem('purple object');
+                  } else {
+                    println(`There's to use this item with here.`);
+                  }
+                }
+              }
+            )
+          },
+          // instruct the engine to remove this option once the player has selected it
+          removeOnRead: true,
+          prereqs: ["machine"]
+        },
+      ],
+    }]
 });
