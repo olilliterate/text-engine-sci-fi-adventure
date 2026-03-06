@@ -8,7 +8,7 @@ const sciFiAdventure = () => ({
       name: 'Zorpburg Intergalactic Spaceport Terminal Zeta', // Displayed each time the player enters the room.
       desc: `Years after your brother was abducted by aliens, you have believe you have finally located where he is being held: The Iridescent Capital of the Galactic Federation, Zorpburg
       
-      You are currently in Terminal Zeta of Zorpbug Intergalactic Spaceport 
+      You are currently in Terminal Zeta of Zorpburg Intergalactic Spaceport 
       
       There is a Skish working at a DESK in the centre of the room
 
@@ -22,7 +22,7 @@ const sciFiAdventure = () => ({
 
       onLook: () => {
         const room = getRoom('spaceport-terminal');
-        room.desc = `You are currently in Terminal Zeta of Zorpbug Intergalactic Spaceport 
+        room.desc = `You are currently in Terminal Zeta of Zorpburg Intergalactic Spaceport 
       
         There is a Skish working at a DESK in the centre of the room
 
@@ -56,7 +56,7 @@ const sciFiAdventure = () => ({
       exits: [
         {
           dir: 'south', // "dir" can be anything. 
-          id: 'spaceport-customs',
+          id: 'Bandit',
           block: `The AIRLOCK is closed.`, // If an exit has a block, the player will not be able to go that direction until the block is removed.
         },
       ],
@@ -71,8 +71,67 @@ const sciFiAdventure = () => ({
           id: 'spaceport-terminal',
         },
       ],
-    }
+    },
+    {
+      id: 'Bandit', // unique ID for this room
+      name: 'The Market', //
+      // room description (shown when player first enters the room)
+      desc:  `You step into the bustling market, a vibrant tapestry of colors and sounds. Stalls line the cobblestone streets, each one brimming with exotic goods and tantalizing aromas.
+
+      The air is thick with the scent of spices and freshly baked bread, mingling with the lively chatter of merchants and customers haggling over prices.
+
+      You're a stranger to this planet. BANDITS notice this and attack!!! Defeat them, get information and proceed`,
+
+      // optional callback when player issues the LOOK command
+      // here, we use it to change the foyer's description
+      onLook: () => {
+        const room = getRoom('Market');
+        room.desc = `You are currently in the market. You are surrounded by bandits they look tough, but you're tougher.
+
+        **Hint**: There's a laser sword stall to the north. Maybe you can find something useful there, to help you fight.
+
+        Type **ITEMS** to see a list of items in the market . Or type **HELP** to see what else you can do!`;
+      },
+      // optional list of items in the room
+      items: [
+        {
+          name: ['stall', `laser sword`, `laser sword stall`,'sword'], // the item's name
+          desc: `This stall stocks laser swords. It is currently unattended`, // description shown when player looks at the item
+
+          onUse: () => {
+            disk.inventory.push({
+              name: ['laser sword', 'sword'], // player can refer to this item by any of these names
+              desc: `A sharp blade made of pure energy. It hums with power, ready to strike down any foe.`, // description shown when player looks at the item
+              onUse() {
+                  const room = getRoom(disk.roomId);
+                  if (room.id === 'Bandit') {
+                      const exit = getExit( 'north', room.exits);
+                      if (exit.block) {
+                          println(`You use the LASER SWORD to defeat the bandits! The path to the north is now clear.`);
+                          delete exit.block;
+                      }
+                  }
+              },
+            })
+          }
+        },
+        {
+          name: "bandits", 
+          desc: "They look tough but you're tougher"
+        }
+    
+      ],
+      exits:[
+        {
+          dir: 'north',
+          id: 'pc-hq',
+          block: `bandits are blocking your way`
+        },
+        
+      ],
+    },
   ],
+  
   characters: [
     {
       name: ['Skish', "worker", 'receptionist'],
