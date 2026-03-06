@@ -85,17 +85,17 @@ const sciFiAdventure = () => ({
       // optional callback when player issues the LOOK command
       // here, we use it to change the foyer's description
       onLook: () => {
-        const room = getRoom('Market');
+        const room = getRoom('Bandit');
         room.desc = `You are currently in the market. You are surrounded by bandits they look tough, but you're tougher.
 
-        **Hint**: There's a laser sword stall to the north. Maybe you can find something useful there, to help you fight.
+        **Hint**: There's a laser sword stall. Maybe you can find something useful there, to help you fight.
 
         Type **ITEMS** to see a list of items in the market . Or type **HELP** to see what else you can do!`;
       },
       // optional list of items in the room
       items: [
         {
-          name: [`laser sword`, `laser sword stall`,'sword'], // the item's name
+          name: [`weapons-stall`, `laser sword stall`,'sword'], // the item's name
           desc: `This stall stocks laser swords. It is currently unattended`, // description shown when player looks at the item
 
           onUse: () => {
@@ -103,7 +103,7 @@ const sciFiAdventure = () => ({
             disk.inventory.push({
               name: ['laser sword', 'sword'], // player can refer to this item by any of these names
               desc: `A sharp blade made of pure energy. It hums with power, ready to strike down any foe.`, // description shown when player looks at the item
-              onUse() {
+              onUse: () => {
                   const room = getRoom(disk.roomId);
                   if (room.id === 'Bandit') {
                       const exit = getExit( 'north', room.exits);
@@ -118,7 +118,25 @@ const sciFiAdventure = () => ({
         },
 
         {
-          name: [""]
+          name: ["tech-shop", "tech", "technology"],
+          desc: `This is a massive ornate tech shop. You suspect you may find some hacking gear if you **USE** it`,
+          onUse: () => {
+            println("A friendly shopper declares you are the 6 zopillon customer and hands you some hacking gear free of charge")
+            disk.inventory.push({
+              name: "hacker-gear",
+              desc: "Great hacking gear. Very useful for hacking",
+              onUse: () => {
+                const room = getRoom(disk.roomId);
+                if (room.id === "pc-hq"){
+                  const exit = getExit("down" , room.exits);
+                  if (exit.block) {
+                    println(`While carefully dodging the alien police, you manage to hack the elevator. The way to your brother cell is now open!!!`)
+                    delete exit.block;
+                  }
+                }
+              }
+            });
+          }
         },
 
         {
@@ -151,7 +169,14 @@ const sciFiAdventure = () => ({
           name: "elevator",
           desc: "A crusty elevator that is in dire need of replacement. It looks like it may be hackable",
           onUse: () => {
-            enterRoom("broCell")
+            const room = getRoom("pc-hq");
+            const exit = getExit("down", room.exits);
+            console.log(exit)
+            if (!exit.block) {
+              enterRoom("broCell")
+            } else{
+              println("You don't have control of the elevator")
+            }
           }
         }
       ],
@@ -161,39 +186,21 @@ const sciFiAdventure = () => ({
           dir: "down",
           id: "broCell",
           block: `You don't have elevator access to this room`
+        },
+        {
+          dir: "south",
+          id: "Bandit",
         }
       ]
+    },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    {
+      id: "broCell",
+      name: "Your Brother's Cell",
+      desc: `Your brother is located in this cell. Hooray, now the question is can you escape back to earth
+      
+      Find out in our next game...
+      `
     }
   ],
   
